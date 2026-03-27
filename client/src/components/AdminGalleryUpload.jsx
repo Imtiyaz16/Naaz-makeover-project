@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function AdminGalleryUpload() {
   const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ function AdminGalleryUpload() {
       uploadData.append("image", image);
 
       const res = await axios.post(
-        "http://localhost:5000/api/gallery/upload",
+       `${API_URL}/api/gallery/upload`,
         uploadData,
         {
           headers: {

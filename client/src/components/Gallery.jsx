@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Gallery() {
   const [images, setImages] = useState([]);
@@ -10,7 +11,7 @@ function Gallery() {
 
   const fetchGallery = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/gallery");
+      const res = await axios.get(`${API_URL}/api/gallery`);
       setImages(res.data.data);
     } catch (error) {
       console.log(error);

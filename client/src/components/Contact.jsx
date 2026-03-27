@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ function Contact() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/bookings", formData);
+      const res = await axios.post(`${API_URL}/api/bookings`, formData);
 
       toast.success(res.data.message);
 
