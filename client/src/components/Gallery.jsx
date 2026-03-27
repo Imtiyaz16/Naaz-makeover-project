@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-const API_URL = import.meta.env.VITE_API_URL;
 
 function Gallery() {
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://naaz-makeover-api.onrender.com";
 
   useEffect(() => {
     fetchGallery();
@@ -11,12 +13,23 @@ function Gallery() {
 
   const fetchGallery = async () => {
     try {
+      console.log("Fetching gallery from:", `${API_URL}/api/gallery`);
+
       const res = await axios.get(`${API_URL}/api/gallery`);
-      setImages(res.data.data);
+
+      console.log("Gallery API response:", res.data);
+
+      setImages(res.data.data || []);
     } catch (error) {
-      console.log(error);
+      console.log("Gallery fetch error:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <p style={{ textAlign: "center" }}>Loading gallery...</p>;
+  }
 
   return (
     <section className="gallery-section" id="gallery">
@@ -26,17 +39,21 @@ function Gallery() {
           <h2>Real Transformations</h2>
         </div>
 
-        <div className="gallery-grid">
-          {images.map((item) => (
-            <div className="gallery-card" key={item._id}>
-              <img src={item.imageUrl} alt={item.title} />
-              <div className="gallery-overlay">
-                <h3>{item.title}</h3>
-                <p>{item.category}</p>
+        {images.length === 0 ? (
+          <p style={{ textAlign: "center" }}>No gallery images found.</p>
+        ) : (
+          <div className="gallery-grid">
+            {images.map((item) => (
+              <div className="gallery-card" key={item._id}>
+                <img src={item.imageUrl} alt={item.title} />
+                <div className="gallery-overlay">
+                  <h3>{item.title}</h3>
+                  <p>{item.category}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

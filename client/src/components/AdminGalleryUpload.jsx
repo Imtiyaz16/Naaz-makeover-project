@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-const API_URL = import.meta.env.VITE_API_URL;
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://naaz-makeover-api.onrender.com";
 
 function AdminGalleryUpload() {
   const [formData, setFormData] = useState({
@@ -45,15 +47,23 @@ function AdminGalleryUpload() {
       uploadData.append("category", formData.category);
       uploadData.append("image", image);
 
+      console.log("Uploading to:", `${API_URL}/api/gallery/upload`);
+      console.log("Title:", formData.title);
+      console.log("Category:", formData.category);
+      console.log("Image file:", image);
+
       const res = await axios.post(
-       `${API_URL}/api/gallery/upload`,
+        `${API_URL}/api/gallery/upload`,
         uploadData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          timeout: 60000,
         }
       );
+
+      console.log("Upload response:", res.data);
 
       toast.success(res.data.message || "Image uploaded successfully");
 
@@ -65,7 +75,14 @@ function AdminGalleryUpload() {
       setImageName("");
       setPreview("");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Upload failed");
+      console.log("Upload error full:", error);
+      console.log("Upload error response:", error.response?.data);
+
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Upload failed"
+      );
     } finally {
       setLoading(false);
     }
