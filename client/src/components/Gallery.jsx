@@ -4,6 +4,8 @@ import axios from "axios";
 function Gallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const API_URL =
     import.meta.env.VITE_API_URL || "https://naaz-makeover-api.onrender.com";
 
@@ -13,35 +15,46 @@ function Gallery() {
 
   const fetchGallery = async () => {
     try {
-      console.log("Fetching gallery from:", `${API_URL}/api/gallery`);
+      setLoading(true);
+      setError("");
 
-      const res = await axios.get(`${API_URL}/api/gallery`);
-
-      console.log("Gallery API response:", res.data);
+      const res = await axios.get(`${API_URL}/api/gallery`, {
+        timeout: 60000,
+      });
 
       setImages(res.data.data || []);
-    } catch (error) {
-      console.log("Gallery fetch error:", error);
+    } catch (err) {
+      console.log("Gallery fetch error:", err);
+      setError("Gallery is taking a little longer to load. Please refresh once.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <p style={{ textAlign: "center" }}>Loading gallery...</p>;
-  }
-
   return (
-    <section className="gallery-section" id="gallery">
+    <section id="gallery" className="gallery-section">
       <div className="container">
         <div className="section-header">
           <p className="section-subtitle">Our Portfolio</p>
           <h2>Real Transformations</h2>
         </div>
 
-        {images.length === 0 ? (
+        {loading && (
+          <p style={{ textAlign: "center" }}>Loading gallery...</p>
+        )}
+
+        {!loading && error && (
+          <div style={{ textAlign: "center" }}>
+            <p>{error}</p>
+            <button onClick={fetchGallery}>Retry</button>
+          </div>
+        )}
+
+        {!loading && !error && images.length === 0 && (
           <p style={{ textAlign: "center" }}>No gallery images found.</p>
-        ) : (
+        )}
+
+        {!loading && !error && images.length > 0 && (
           <div className="gallery-grid">
             {images.map((item) => (
               <div className="gallery-card" key={item._id}>
