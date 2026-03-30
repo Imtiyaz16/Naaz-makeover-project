@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-const API_URL = import.meta.env.VITE_API_URL;
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://naaz-makeover-api.onrender.com";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -24,7 +26,9 @@ function Contact() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${API_URL}/api/bookings`, formData);
+      const res = await axios.post(`${API_URL}/api/bookings`, formData, {
+        timeout: 30000,
+      });
 
       toast.success(res.data.message);
 
@@ -37,9 +41,7 @@ function Contact() {
         message: "",
       });
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Something went wrong"
-      );
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 

@@ -13,21 +13,33 @@ function Gallery() {
     fetchGallery();
   }, []);
 
-  const fetchGallery = async () => {
+  const fetchGallery = async (retryCount = 0) => {
     try {
       setLoading(true);
       setError("");
 
       const res = await axios.get(`${API_URL}/api/gallery`, {
-        timeout: 60000,
+        timeout: 30000,
       });
 
       setImages(res.data.data || []);
     } catch (err) {
       console.log("Gallery fetch error:", err);
-      setError("Gallery is taking a little longer to load. Please refresh once.");
+
+      if (retryCount < 2) {
+        setTimeout(() => {
+          fetchGallery(retryCount + 1);
+        }, 2500);
+        return;
+      }
+
+      setError("Gallery failed to load. Please try again.");
     } finally {
-      setLoading(false);
+      if (retryCount >= 2 || images.length > 0) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -39,14 +51,12 @@ function Gallery() {
           <h2>Real Transformations</h2>
         </div>
 
-        {loading && (
-          <p style={{ textAlign: "center" }}>Loading gallery...</p>
-        )}
+        {loading && <p style={{ textAlign: "center" }}>Loading gallery...</p>}
 
         {!loading && error && (
           <div style={{ textAlign: "center" }}>
             <p>{error}</p>
-            <button onClick={fetchGallery}>Retry</button>
+            <button onClick={() => fetchGallery()}>Retry</button>
           </div>
         )}
 
@@ -58,7 +68,12 @@ function Gallery() {
           <div className="gallery-grid">
             {images.map((item) => (
               <div className="gallery-card" key={item._id}>
-                <img src={item.imageUrl} alt={item.title} />
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                />
                 <div className="gallery-overlay">
                   <h3>{item.title}</h3>
                   <p>{item.category}</p>

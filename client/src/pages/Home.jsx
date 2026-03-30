@@ -17,7 +17,6 @@ function Home() {
       <Gallery />
       <Testimonials />
       <Contact />
-      <Gallery />
       <InstagramSection />
       <WhatsAppFloat/>
       <Footer />
