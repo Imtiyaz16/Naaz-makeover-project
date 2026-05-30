@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
 import { Camera, Sparkles, RefreshCcw } from "lucide-react";
+import api from "../utils/api";
 import "../styles/gallery.css"
 
 function Gallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const API_URL =
-    import.meta.env.VITE_API_URL || "https://naaz-makeover-api.onrender.com";
 
   useEffect(() => {
     fetchGallery();
@@ -21,9 +18,7 @@ function Gallery() {
       setLoading(true);
       setError("");
 
-      const res = await axios.get(`${API_URL}/api/gallery`, {
-        timeout: 30000,
-      });
+      const res = await api.get("/api/gallery");
 
       setImages(res.data.data || []);
     } catch (err) {

@@ -6,7 +6,7 @@ const API_URL =
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 30000,
+  timeout: 90000,
 });
 
 // Request Interceptor: Attach Auth token if present

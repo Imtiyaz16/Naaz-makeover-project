@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
 import { ArrowLeftRight, Sparkles } from "lucide-react";
-
-const API_URL =
-  import.meta.env.VITE_API_URL || "https://naaz-makeover-api.onrender.com";
+import api from "../utils/api";
 
 function BeforeAfterCard({ item, index }) {
   const [sliderValue, setSliderValue] = useState(50);
@@ -82,9 +79,7 @@ function BeforeAfter() {
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/api/before-after`, {
-        timeout: 30000,
-      });
+      const res = await api.get("/api/before-after");
       setItems(res.data.items || []);
     } catch (error) {
       console.log("Before / After fetch error:", error);
