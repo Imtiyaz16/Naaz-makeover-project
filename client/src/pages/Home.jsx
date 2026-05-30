@@ -7,6 +7,9 @@ import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import InstagramSection from "../components/InstagramSection";
 import WhatsAppFloat from "../components/WhatsAppFloat";
+import BeforeAfter from "../components/BeforeAfter";
+import AvailabilityChecker from "../components/AvailabilityChecker";
+import FaqCta from "../components/FaqCta";
 
 function Home() {
   return (
@@ -15,10 +18,13 @@ function Home() {
       <Hero />
       <Services />
       <Gallery />
+      <BeforeAfter />
+      <AvailabilityChecker/>
       <Testimonials />
+      <FaqCta />
       <Contact />
       <InstagramSection />
-      <WhatsAppFloat/>
+      <WhatsAppFloat />
       <Footer />
     </>
   );

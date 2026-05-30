@@ -1,5 +1,5 @@
 const Gallery = require("../models/Gallery");
-const cloudinary = require("../utils/cloudinary");
+const cloudinary = require("../config/cloudinary");
 const streamifier = require("streamifier");
 
 const uploadToCloudinary = (fileBuffer) => {
